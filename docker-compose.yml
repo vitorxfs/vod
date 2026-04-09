@@ -1,0 +1,62 @@
+name: myapp
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development # uses the "development" stage
+    container_name: app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "9229:9229" # Node.js inspector / debugger
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+
+      # Database settings used by the Node app
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_NAME: ${DB_NAME:-vod}
+
+      # Redis
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - ./src:/app/src # live source sync
+      - ./tsconfig.json:/app/tsconfig.json
+      - node_modules:/app/node_modules # isolate container modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    develop:
+      watch:
+        # Rebuild image when dependencies change
+        - path: ./package.json
+          action: rebuild
+        - path: ./package-lock.json
+          action: rebuild
+        - path: ./tsconfig.json
+          action: rebuild
+        # Sync source changes without rebuilding
+        - path: ./src
+          target: /app/src
+          action: sync
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_DB: ${DB_NAME:-vod}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+  node_modules:
