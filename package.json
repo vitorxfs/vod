@@ -9,10 +9,13 @@
   "license": "ISC",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "NODE_OPTIONS=--env-file=.env.local tsx watch src/index.ts"
   },
   "dependencies": {
-    "fastify": "^5.8.4"
+    "fastify": "^5.8.4",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.28",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/node": "^25.5.2",
