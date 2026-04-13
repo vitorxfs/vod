@@ -9,7 +9,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
-    "dev": "NODE_OPTIONS=--env-file=.env.local tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts"
   },
   "dependencies": {
     "fastify": "^5.8.4",
