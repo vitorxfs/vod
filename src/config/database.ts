@@ -10,7 +10,12 @@ export const AppDataSource = new DataSource({
   database: env.DB_NAME,
   synchronize: false,
   logging: env.NODE_ENV === "development",
-  entities: ["src/**/*.entity.ts", "dist/**/*.entity.js"],
+  entities: [
+    "src/**/*.entity.ts",
+    "src/modules/**/database/schema.ts",
+    "dist/**/*.entity.js",
+    "dist/modules/**/database/schema.js",
+  ],
   migrations: ["src/database/migrations/**/*.ts", "dist/database/migrations/**/*.js"],
   subscribers: ["src/database/subscribers/**/*.ts", "dist/database/subscribers/**/*.js"],
 });

@@ -1,0 +1,56 @@
+export interface CreateUserDTO {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface UserDTO {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export const userSchema = {
+  type: "object",
+  properties: {
+    id: { type: "string" },
+    name: { type: "string" },
+    email: { type: "string" },
+    createdAt: { type: "string" },
+    updatedAt: { type: "string" },
+  },
+};
+
+export const userListSchema = {
+  type: "array",
+  items: userSchema,
+};
+
+export const createUserSchema = {
+  type: "object",
+  required: ["name", "email", "password"],
+  properties: {
+    name: { type: "string" },
+    email: { type: "string", format: "email" },
+    password: { type: "string" },
+  },
+};
+
+export const updateUserSchema = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+    email: { type: "string", format: "email" },
+    password: { type: "string" },
+  },
+};
+
+export const idParamSchema = {
+  type: "object",
+  required: ["id"],
+  properties: {
+    id: { type: "string" },
+  },
+};
