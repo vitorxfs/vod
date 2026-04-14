@@ -1,5 +1,5 @@
 import { Repository } from "typeorm";
-import { AppDataSource } from "../../config/database";
+import database from "../../config/database";
 import { UserDatabaseMapper } from "./database/mapper";
 import { UserEntity } from "./database/schema";
 import { User } from "./model";
@@ -8,7 +8,7 @@ export class UserRepository {
   private repo: Repository<UserEntity>;
 
   constructor() {
-    this.repo = AppDataSource.getRepository(UserEntity);
+    this.repo = database.getRepository(UserEntity);
   }
 
   async create(user: User): Promise<User> {

@@ -9,10 +9,17 @@
   "license": "ISC",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "tsx watch src/index.ts",
+    "typeorm": "node --import tsx -r reflect-metadata node_modules/typeorm/cli.js -d src/config/database.ts",
+    "migration:run": "npm run typeorm -- migration:run"
   },
   "dependencies": {
+    "@fastify/swagger": "^9.7.0",
+    "@scalar/fastify-api-reference": "^1.52.1",
+    "@types/pg": "^8.20.0",
     "fastify": "^5.8.4",
+    "fastify-plugin": "^5.1.0",
+    "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.28",
     "zod": "^4.3.6"

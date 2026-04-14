@@ -1,24 +1,22 @@
 import fastify from "fastify";
-import "reflect-metadata";
-import { AppDataSource } from "./config/database";
+import database from "./config/database";
+import { env } from "./config/env";
 import { routes } from "./modules";
+import { docs } from './config/docs';
 
 const server = fastify();
 
-server.get("/ping", async (request, reply) => {
+server.get("/ping", async () => {
   return "pong\n";
 });
 
 async function bootstrap() {
   try {
-    // Initialize database connection
-    await AppDataSource.initialize();
-    console.log("Database connection established");
-
-    // Register all module routes
+    await server.register(docs);
+    await database.initialize();
     await routes(server);
 
-    server.listen({ port: 8080 }, (err, address) => {
+    server.listen({ host: "0.0.0.0", port: env.PORT }, (err, address) => {
       if (err) {
         console.error(err);
         process.exit(1);
