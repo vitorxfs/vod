@@ -11,7 +11,8 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "typeorm": "node --import tsx -r reflect-metadata node_modules/typeorm/cli.js -d src/config/database.ts",
-    "migration:run": "npm run typeorm -- migration:run"
+    "migration:run": "npm run typeorm -- migration:run",
+    "module:create": "sh scripts/create-module.sh"
   },
   "dependencies": {
     "@fastify/swagger": "^9.7.0",
