@@ -8,6 +8,7 @@ const envSchema = z.object({
   DB_USER: z.string().min(1).default("postgres"),
   DB_PASSWORD: z.string().default("postgres"),
   DB_NAME: z.string().min(1).default("vod"),
+  JWT_SECRET: z.string().min(1).default("your_jwt_secret_key"),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

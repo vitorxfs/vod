@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply } from "fastify";
 import { errorSchema } from "../../utils/error-handling/errorSchema";
 import { userSchema } from "../user/dto/dto";
 import { UserDTOMapper } from "../user/dto/mapper";
@@ -18,7 +18,7 @@ export async function authRoutes(app: FastifyInstance) {
         400: errorSchema,
       },
     },
-    handler: async (request, reply) => {
+    handler: async (request, reply: FastifyReply) => {
       const data = request.body as LoginDto;
       const user = await authService.login(data);
 
@@ -28,7 +28,7 @@ export async function authRoutes(app: FastifyInstance) {
 
       const authDto = UserDTOMapper.toDto(user);
 
-      return reply.status(201).send(authDto);
+      return reply.setCookie("token", authService.generateToken(user)).status(200).send(authDto);
     },
   });
 }

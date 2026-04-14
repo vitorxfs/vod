@@ -1,8 +1,9 @@
+import cookie from "@fastify/cookie";
 import fastify from "fastify";
 import database from "./config/database";
+import { docs } from "./config/docs";
 import { env } from "./config/env";
 import { routes } from "./modules";
-import { docs } from './config/docs';
 
 const server = fastify();
 
@@ -12,8 +13,11 @@ server.get("/ping", async () => {
 
 async function bootstrap() {
   try {
-    await server.register(docs);
     await database.initialize();
+
+    await server.register(docs);
+    await server.register(cookie);
+
     await routes(server);
 
     server.listen({ host: "0.0.0.0", port: env.PORT }, (err, address) => {

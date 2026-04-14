@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+import { env } from "../../config/env";
 import { verify } from "../../utils/security/hash";
 import { User } from "../user/model";
 import { UserRepository } from "./../user/repository";
@@ -5,6 +7,7 @@ import { LoginDto } from "./dto/dto";
 
 export interface IAuthService {
   login({ email, password }: LoginDto): Promise<User | null>;
+  generateToken(user: User): string;
 }
 
 export interface AuthServiceDependencies {
@@ -29,6 +32,10 @@ export class AuthService implements IAuthService {
     }
 
     return user;
+  }
+
+  generateToken(user: User): string {
+    return jwt.sign({ userId: user.id, role: user.role }, env.JWT_SECRET, { expiresIn: "8h" });
   }
 
   private async verifyPassword(inputPassword: string, storedPassword: string): Promise<boolean> {
