@@ -8,10 +8,10 @@ import {
   userListSchema,
   userSchema,
 } from "./dto/dto";
-import { dtoMapper } from "./dto/mapper";
-import { UserService } from "./service";
+import { UserDTOMapper } from "./dto/mapper";
+import { userServiceFactory } from "./factories";
 
-const userService = new UserService();
+const userService = userServiceFactory();
 
 export async function userRoutes(app: FastifyInstance) {
   app.route({
@@ -26,15 +26,15 @@ export async function userRoutes(app: FastifyInstance) {
       },
     },
     handler: async (request, reply) => {
-      const { name, email, password } = request.body as CreateUserDTO;
+      const data = request.body as CreateUserDTO;
 
-      const existingUser = await userService.findByEmail(email);
+      const existingUser = await userService.findByEmail(data.email);
       if (existingUser) {
         return reply.status(409).send({ error: "Email already in use" });
       }
 
-      const user = await userService.create({ name, email, password });
-      const userDTO = dtoMapper(user);
+      const user = await userService.create(UserDTOMapper.toCreateModel(data));
+      const userDTO = UserDTOMapper.toDto(user);
 
       return reply.status(201).send(userDTO);
     },
@@ -50,7 +50,7 @@ export async function userRoutes(app: FastifyInstance) {
     },
     handler: async (_, reply) => {
       const users = await userService.findAll();
-      const usersDTO = users.map((user) => dtoMapper(user));
+      const usersDTO = users.map((user) => UserDTOMapper.toDto(user));
       return reply.send(usersDTO);
     },
   });
@@ -73,7 +73,7 @@ export async function userRoutes(app: FastifyInstance) {
         return reply.status(404).send({ error: "User not found" });
       }
 
-      const userDTO = dtoMapper(user);
+      const userDTO = UserDTOMapper.toDto(user);
       return reply.send(userDTO);
     },
   });
@@ -98,7 +98,7 @@ export async function userRoutes(app: FastifyInstance) {
         return reply.status(404).send({ error: "User not found" });
       }
 
-      const userDTO = dtoMapper(user);
+      const userDTO = UserDTOMapper.toDto(user);
       return reply.send(userDTO);
     },
   });

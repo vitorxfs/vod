@@ -1,26 +1,27 @@
-import { CreateUserDTO } from "./dto/dto";
 import { User } from "./model";
 import { UserRepository } from "./repository";
 
-export class UserService {
+export interface IUserService {
+  create(user: User): Promise<User>;
+  findAll(): Promise<User[]>;
+  findById(id: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
+  update(id: string, data: Partial<User>): Promise<User | null>;
+  delete(id: string): Promise<boolean>;
+}
+
+export interface UserServiceDependencies {
+  repository: UserRepository;
+}
+
+export class UserService implements IUserService {
   private repository: UserRepository;
 
-  constructor() {
-    this.repository = new UserRepository();
+  constructor(deps: UserServiceDependencies) {
+    this.repository = deps.repository;
   }
 
-  async create(createUserDTO: CreateUserDTO): Promise<User> {
-    const now = new Date();
-
-    const user = new User({
-      id: undefined as any,
-      name: createUserDTO.name,
-      email: createUserDTO.email,
-      password: createUserDTO.password,
-      createdAt: now,
-      updatedAt: now,
-    });
-
+  async create(user: User): Promise<User> {
     return this.repository.create(user);
   }
 
@@ -36,7 +37,7 @@ export class UserService {
     return this.repository.findByEmail(email);
   }
 
-  async update(id: string, data: Partial<CreateUserDTO>): Promise<User | null> {
+  async update(id: string, data: Partial<User>): Promise<User | null> {
     return this.repository.update(id, data);
   }
 

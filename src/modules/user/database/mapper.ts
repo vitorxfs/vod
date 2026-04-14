@@ -1,8 +1,10 @@
+import { DeepPartial } from "typeorm";
+import { DbMapper } from "../../../utils/mapper";
 import { User } from "../model";
 import { UserEntity } from "./schema";
 
-export class UserDatabaseMapper {
-  static toDomain(raw: UserEntity): User {
+export class UserDatabaseMapper implements DbMapper<User, UserEntity> {
+  toDomain(raw: UserEntity): User {
     return new User({
       id: raw.id,
       name: raw.name,
@@ -13,7 +15,7 @@ export class UserDatabaseMapper {
     });
   }
 
-  static toPersistence(user: User): Partial<UserEntity> {
+  toPersistence(user: Partial<User>): DeepPartial<UserEntity> {
     return {
       id: user.id,
       name: user.name,
@@ -21,6 +23,6 @@ export class UserDatabaseMapper {
       password: user.password,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-    };
+    } as DeepPartial<UserEntity>;
   }
 }
