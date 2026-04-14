@@ -395,6 +395,32 @@ echo "✅ dto/dto.ts created"
 echo "✅ dto/mapper.ts created"
 echo "✅ routes.ts created"
 
+# Register routes in index.ts
+INDEX_FILE="src/modules/index.ts"
+
+# Add import statement
+IMPORT_LINE="import { __MODULE_NAME__Routes } from \"./__MODULE_NAME__/routes\";"
+IMPORT_LINE_REPLACED=$(echo "$IMPORT_LINE" | sed "s/__MODULE_NAME__/$MODULE_NAME/g")
+
+# Check if import already exists
+if ! grep -q "$IMPORT_LINE_REPLACED" "$INDEX_FILE"; then
+  # Add import after the last import (find line number of last import, then insert after it)
+  LAST_IMPORT_LINE=$(grep -n "^import.*from" "$INDEX_FILE" | tail -1 | cut -d: -f1)
+  sed -i "${LAST_IMPORT_LINE}a\\$IMPORT_LINE_REPLACED" "$INDEX_FILE"
+  echo "✅ Import added to index.ts"
+fi
+
+# Add route registration in the routes function
+ROUTE_CALL="  await __MODULE_NAME__Routes(app);"
+ROUTE_CALL_REPLACED=$(echo "$ROUTE_CALL" | sed "s/__MODULE_NAME__/$MODULE_NAME/g")
+
+# Check if route call already exists
+if ! grep -q "await ${MODULE_NAME}Routes(app);" "$INDEX_FILE"; then
+  # Add the route call before the closing brace
+  sed -i "/^}/i\\$ROUTE_CALL_REPLACED" "$INDEX_FILE"
+  echo "✅ Route registration added to index.ts"
+fi
+
 echo ""
 echo "🎉 Module '$MODULE_NAME' created successfully!"
 echo "📁 Location: $MODULE_PATH"
@@ -404,4 +430,3 @@ echo "  1. Update database/schema.ts to add domain-specific columns"
 echo "  2. Update model.ts to add domain-specific properties"
 echo "  3. Update dto/dto.ts to add domain-specific DTO properties"
 echo "  4. Update routes.ts with your business logic"
-echo "  5. Register routes in src/index.ts"
