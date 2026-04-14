@@ -10,8 +10,9 @@
   "packageManager": "pnpm@10.33.0",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "typeorm": "node --import tsx -r reflect-metadata node_modules/typeorm/cli.js -d src/config/database.ts",
+    "typeorm": "node --import tsx -r reflect-metadata node_modules/typeorm/cli.js -d ./src/config/database.ts",
     "migration:run": "npm run typeorm -- migration:run",
+    "migration:generate": "npm run typeorm -- migration:generate ./src/database/migrations",
     "module:create": "sh scripts/create-module.sh"
   },
   "dependencies": {

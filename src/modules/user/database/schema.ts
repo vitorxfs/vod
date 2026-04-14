@@ -14,6 +14,9 @@ export class UserEntity {
   @Column({ type: "varchar", length: 255 })
   password!: string;
 
+  @Column({ type: "enum", enum: ["student", "admin"], default: "student" })
+  role!: string;
+
   @CreateDateColumn()
   createdAt!: Date;
 

@@ -1,3 +1,4 @@
+import { hash } from "../../utils/security/hash";
 import { User } from "./model";
 import { UserRepository } from "./repository";
 
@@ -22,6 +23,7 @@ export class UserService implements IUserService {
   }
 
   async create(user: User): Promise<User> {
+    user.password = await this.hashPassword(user.password);
     return this.repository.create(user);
   }
 
@@ -38,10 +40,17 @@ export class UserService implements IUserService {
   }
 
   async update(id: string, data: Partial<User>): Promise<User | null> {
+    if (data.password) {
+      data.password = await this.hashPassword(data.password);
+    }
     return this.repository.update(id, data);
   }
 
   async delete(id: string): Promise<boolean> {
     return this.repository.delete(id);
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    return hash(password);
   }
 }

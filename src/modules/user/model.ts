@@ -1,10 +1,16 @@
+export enum UserRole {
+  ADMIN = "admin",
+  USER = "user",
+}
+
 export class User {
-  id: string = "";
-  name: string = "";
-  email: string = "";
-  password: string = "";
-  createdAt: Date = new Date();
-  updatedAt: Date = new Date();
+  id: string;
+  name: string;
+  email: string;
+  createdAt: Date;
+  updatedAt: Date;
+  role: UserRole;
+  password: string;
 
   constructor(data: Partial<User>) {
     Object.assign(this, data);

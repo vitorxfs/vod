@@ -1,5 +1,5 @@
 import { User } from "../model";
-import { CreateUserDTO, UserDTO } from "./dto";
+import { CreateUserDTO, UpdateUserDTO, UserDTO } from "./dto";
 
 export class UserDTOMapper {
   static toDto(user: User): UserDTO {
@@ -9,16 +9,16 @@ export class UserDTOMapper {
       email: user.email,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      role: user.role,
     };
   }
 
-  static toModel(dto: UserDTO): User {
+  static toUpdateModel(id: string, dto: UpdateUserDTO): User {
     return new User({
-      id: dto.id,
+      id,
       name: dto.name,
       email: dto.email,
-      createdAt: dto.createdAt,
-      updatedAt: dto.updatedAt,
+      password: dto.password,
     });
   }
 
