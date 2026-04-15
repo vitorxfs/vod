@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { ErrorCodes } from "../../utils/error-handling/errorCodes";
 import { errorSchema } from "../../utils/error-handling/errorSchema";
-import { authFactory } from "../../utils/security/auth";
+import { AccessType, authFactory } from "../../utils/security/auth";
 import { authServiceFactory } from "../auth/factories";
 import {
   CreateUserDTO,
@@ -53,7 +53,7 @@ export async function userRoutes(app: FastifyInstance) {
         200: userListSchema,
       },
     },
-    preValidation: auth([UserRole.Admin]),
+    preValidation: auth(AccessType.Admin),
     handler: async (request, reply) => {
       const users = await userService.findAll();
       const usersDTO = users.map((user) => UserDTOMapper.toDto(user));
@@ -71,7 +71,7 @@ export async function userRoutes(app: FastifyInstance) {
         404: errorSchema,
       },
     },
-    preValidation: auth([UserRole.Student, UserRole.Admin]),
+    preValidation: auth(AccessType.Student),
     handler: async (request, reply) => {
       const { id } = request.params as { id: string };
       const { authenticated } = request.body as { authenticated: User };
@@ -102,7 +102,7 @@ export async function userRoutes(app: FastifyInstance) {
         404: errorSchema,
       },
     },
-    preValidation: auth([UserRole.Student, UserRole.Admin]),
+    preValidation: auth(AccessType.Student),
     handler: async (request, reply) => {
       const { id } = request.params as { id: string };
       const { authenticated } = request.body as { authenticated: User };
@@ -133,7 +133,7 @@ export async function userRoutes(app: FastifyInstance) {
         404: errorSchema,
       },
     },
-    preValidation: auth([UserRole.Student, UserRole.Admin]),
+    preValidation: auth(AccessType.Student),
     handler: async (request, reply) => {
       const { id } = request.params as { id: string };
       const { authenticated } = request.body as { authenticated: User };

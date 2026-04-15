@@ -414,11 +414,11 @@ if ! grep -q "$IMPORT_LINE_REPLACED" "$INDEX_FILE"; then
 fi
 
 # Add route registration in the routes function
-ROUTE_CALL="  await __MODULE_NAME__Routes(app);"
+ROUTE_CALL="  app.register(__MODULE_NAME__Routes);"
 ROUTE_CALL_REPLACED=$(echo "$ROUTE_CALL" | sed "s/__MODULE_NAME__/$MODULE_NAME/g")
 
 # Check if route call already exists
-if ! grep -q "await ${MODULE_NAME}Routes(app);" "$INDEX_FILE"; then
+if ! grep -q "app.register(${MODULE_NAME}Routes);" "$INDEX_FILE"; then
   # Add the route call before the closing brace
   sed -i "/^}/i\\$ROUTE_CALL_REPLACED" "$INDEX_FILE"
   echo "✅ Route registration added to index.ts"

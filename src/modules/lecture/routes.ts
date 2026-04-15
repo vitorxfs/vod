@@ -3,109 +3,111 @@ import { errorSchema } from "../../utils/error-handling/errorSchema";
 import { AccessType, authFactory } from "../../utils/security/auth";
 import { authServiceFactory } from "../auth/factories";
 import {
-  CourseListSchema,
-  CourseSchema,
-  CreateCourseDto,
-  createCourseSchema,
+  CreateLectureDto,
+  LectureListSchema,
+  LectureSchema,
+  createLectureSchema,
   idParamSchema,
-  updateCourseSchema,
+  updateLectureSchema,
 } from "./dto/dto";
-import { CourseDtoMapper } from "./dto/mapper";
-import { courseServiceFactory } from "./factories";
+import { LectureDtoMapper } from "./dto/mapper";
+import { lectureServiceFactory } from "./factories";
 
-const courseService = courseServiceFactory();
+const lectureService = lectureServiceFactory();
 const auth = authFactory(authServiceFactory());
 
-export async function courseRoutes(app: FastifyInstance) {
+export async function lectureRoutes(app: FastifyInstance) {
   app.route({
     method: "POST",
-    url: "/courses",
+    url: "/lectures",
     schema: {
-      body: createCourseSchema,
+      body: createLectureSchema,
       response: {
-        201: CourseSchema,
+        201: LectureSchema,
         400: errorSchema,
+      },
+    },
+    preValidation: auth(AccessType.Admin),
+    handler: async (request, reply) => {
+      const data = request.body as CreateLectureDto;
+      const lecture = await lectureService.create(LectureDtoMapper.toCreateModel(data));
+      const lectureDto = LectureDtoMapper.toDto(lecture);
+
+      return reply.status(201).send(lectureDto);
+    },
+  });
+
+  app.route({
+    method: "GET",
+    url: "/lectures",
+    schema: {
+      response: {
+        200: LectureListSchema,
       },
     },
     preValidation: auth(AccessType.Student),
     handler: async (request, reply) => {
-      const data = request.body as CreateCourseDto;
-      const course = await courseService.create(CourseDtoMapper.toCreateModel(data));
-      const courseDto = CourseDtoMapper.toDto(course);
+      const lectures = await lectureService.findAll();
+      const lectureDtos = lectures.map((lecture) => LectureDtoMapper.toDto(lecture));
 
-      return reply.status(201).send(courseDto);
+      return reply.send(lectureDtos);
     },
   });
 
   app.route({
     method: "GET",
-    url: "/courses",
-    schema: {
-      response: {
-        200: CourseListSchema,
-      },
-    },
-    handler: async (request, reply) => {
-      const courses = await courseService.findAll();
-      const courseDtos = courses.map((course) => CourseDtoMapper.toDto(course));
-
-      return reply.send(courseDtos);
-    },
-  });
-
-  app.route({
-    method: "GET",
-    url: "/courses/:id",
+    url: "/lectures/:id",
     schema: {
       params: idParamSchema,
       response: {
-        200: CourseSchema,
+        200: LectureSchema,
         404: errorSchema,
       },
     },
+    preValidation: auth(AccessType.Student),
     handler: async (request, reply) => {
       const { id } = request.params as { id: string };
-      const course = await courseService.findById(id);
+      const lecture = await lectureService.findById(id);
 
-      if (!course) {
+      if (!lecture) {
         return reply.status(404).send({ error: "Not found" });
       }
 
-      const courseDto = CourseDtoMapper.toDto(course);
-      return reply.send(courseDto);
+      const lectureDto = LectureDtoMapper.toDto(lecture);
+      return reply.send(lectureDto);
     },
   });
 
   app.route({
     method: "PATCH",
-    url: "/courses/:id",
+    url: "/lectures/:id",
     schema: {
       params: idParamSchema,
-      body: updateCourseSchema,
+      body: updateLectureSchema,
       response: {
-        200: CourseSchema,
+        200: LectureSchema,
         404: errorSchema,
       },
     },
     preValidation: auth(AccessType.Admin),
     handler: async (request, reply) => {
       const { id } = request.params as { id: string };
-      const data = request.body as Partial<CreateCourseDto>;
+      const data = request.body as Partial<CreateLectureDto>;
 
-      const course = await courseService.update(id, {});
+      const lecture = await lectureService.update(id, {});
 
-      if (!course) {
+      if (!lecture) {
         return reply.status(404).send({ error: "Not found" });
       }
 
-      const courseDto = CourseDtoMapper.toDto(course);
-      return reply.send(courseDto);
+      const lectureDto = LectureDtoMapper.toDto(lecture);
+      return reply.send(lectureDto);
     },
   });
 
   app.route({
     method: "DELETE",
-    url: "/courses/:id",
+    url: "/lectures/:id",
     schema: {
       params: idParamSchema,
       response: {
@@ -116,7 +118,7 @@ export async function courseRoutes(app: FastifyInstance) {
     preValidation: auth(AccessType.Admin),
     handler: async (request, reply) => {
       const { id } = request.params as { id: string };
-      const deleted = await courseService.delete(id);
+      const deleted = await lectureService.delete(id);
 
       if (!deleted) {
         return reply.status(404).send({ error: "Not found" });
