@@ -1,4 +1,4 @@
-import { User } from "../model";
+import { User, UserRole } from "../model";
 import { CreateUserDTO, UpdateUserDTO, UserDTO } from "./dto";
 
 export class UserDTOMapper {
@@ -9,8 +9,7 @@ export class UserDTOMapper {
       email: user.email,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      role: user.role,
-    };
+    }
   }
 
   static toUpdateModel(id: string, dto: UpdateUserDTO): User {

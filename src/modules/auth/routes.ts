@@ -4,6 +4,7 @@ import { userSchema } from "../user/dto/dto";
 import { UserDTOMapper } from "../user/dto/mapper";
 import { LoginDto, loginSchema } from "./dto/dto";
 import { authServiceFactory } from "./factories";
+import { env } from '../../config/env';
 
 const authService = authServiceFactory();
 
@@ -28,7 +29,13 @@ export async function authRoutes(app: FastifyInstance) {
 
       const authDto = UserDTOMapper.toDto(user);
 
-      return reply.setCookie("token", authService.generateToken(user)).status(200).send(authDto);
+      reply.setCookie("Authorization", authService.generateToken(user, "access"), {
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
+
+      return reply.status(200).send(authDto);
     },
   });
 }

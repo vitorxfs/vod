@@ -1,6 +1,6 @@
 import { DeepPartial } from "typeorm";
 import { DbMapper } from "../../../utils/mapper";
-import { User } from "../model";
+import { User, UserRole } from "../model";
 import { UserEntity } from "./schema";
 
 export class UserDatabaseMapper implements DbMapper<User, UserEntity> {
@@ -12,6 +12,7 @@ export class UserDatabaseMapper implements DbMapper<User, UserEntity> {
       password: raw.password,
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
+      role: raw.role as UserRole,
     });
   }
 

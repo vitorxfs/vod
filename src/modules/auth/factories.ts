@@ -1,4 +1,4 @@
-import { UserRepository } from "../user/repository";
+import { userServiceFactory } from '../user/factories';
 import { AuthService, IAuthService } from "./service";
 
 let authService: IAuthService;
@@ -8,7 +8,7 @@ export const authServiceFactory = (): IAuthService => {
   }
 
   authService = new AuthService({
-    repository: new UserRepository(),
+    userService: userServiceFactory(),
   });
   return authService;
 };

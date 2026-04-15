@@ -18,7 +18,7 @@ App -uploads-> S3 (raw) -> MediaConvert -> S3 -> CloudFront -consumed by-> App
 - [x] Create Dockerfile and docker-compose.yml
 - [x] Create base project structure
 - [x] Connect database
-- [ ] Add User authentication flow
+- [x] Add User authentication flow
 - [ ] Course structure
 - [ ] Class structure
 - [ ] Class Progress structure

@@ -19,7 +19,6 @@ export interface UserDTO {
   email: string;
   createdAt: Date;
   updatedAt: Date;
-  role: UserRole;
 }
 
 export const userSchema = {
