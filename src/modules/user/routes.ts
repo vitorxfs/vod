@@ -1,5 +1,8 @@
-import { FastifyInstance, FastifyRequest } from "fastify";
+import { FastifyInstance } from "fastify";
+import { ErrorCodes } from "../../utils/error-handling/errorCodes";
 import { errorSchema } from "../../utils/error-handling/errorSchema";
+import { authFactory } from "../../utils/security/auth";
+import { authServiceFactory } from "../auth/factories";
 import {
   CreateUserDTO,
   createUserSchema,
@@ -10,10 +13,7 @@ import {
 } from "./dto/dto";
 import { UserDTOMapper } from "./dto/mapper";
 import { userServiceFactory } from "./factories";
-import { authServiceFactory } from '../auth/factories';
-import { User, UserRole } from './model';
-import { authFactory } from '../../utils/security/auth';
-import { ErrorCodes } from '../../utils/error-handling/errorCodes';
+import { User, UserRole } from "./model";
 
 const userService = userServiceFactory();
 const auth = authFactory(authServiceFactory());
@@ -68,7 +68,7 @@ export async function userRoutes(app: FastifyInstance) {
       params: idParamSchema,
       response: {
         200: userSchema,
-        404: errorSchema
+        404: errorSchema,
       },
     },
     preValidation: auth([UserRole.Student, UserRole.Admin]),

@@ -1,8 +1,10 @@
 import { FastifyInstance } from "fastify";
-import { userRoutes } from "./user/routes";
 import { authRoutes } from "./auth/routes";
+import { courseRoutes } from "./course/routes";
+import { userRoutes } from "./user/routes";
 
 export async function routes(app: FastifyInstance) {
-  await userRoutes(app);
-  await authRoutes(app);
+  app.register(userRoutes);
+  app.register(authRoutes);
+  app.register(courseRoutes);
 }
