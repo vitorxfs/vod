@@ -12,17 +12,10 @@ services:
       - "3000:3000"
       - "9229:9229" # Node.js inspector / debugger
     env_file:
-      - ./.env.local
+      - ./.env
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
-      PORT: ${PORT:-3000}
-
-      # Database settings used by the Node app
-      DB_HOST: ${DB_HOST:-postgres}
+      DB_HOST: postgres
       DB_PORT: 5432
-      DB_USER: ${DB_USER:-postgres}
-      DB_PASSWORD: ${DB_PASSWORD:-postgres}
-      DB_NAME: ${DB_NAME:-vod}
     volumes:
       - ./src:/app/src # live source sync
       - ./tsconfig.json:/app/tsconfig.json

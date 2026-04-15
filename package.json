@@ -12,7 +12,7 @@
     "dev": "tsx watch src/index.ts",
     "typeorm": "node --import tsx -r reflect-metadata node_modules/typeorm/cli.js -d ./src/config/database.ts",
     "migration:run": "npm run typeorm -- migration:run",
-    "migration:generate": "npm run typeorm -- migration:generate ./src/database/migrations",
+    "migration:generate": "f() { npm run typeorm -- migration:generate ./src/database/migrations/$1; }; f",
     "module:create": "sh scripts/create-module.sh"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.5.2",
+    "dotenv": "^17.4.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   }

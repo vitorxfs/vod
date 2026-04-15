@@ -30,9 +30,9 @@ echo "✅ Directories created"
 # Create model.ts
 cat > "$MODULE_PATH/model.ts" << 'EOF'
 export class __CLASS_NAME__ {
-  id: string = "";
-  createdAt: Date = new Date();
-  updatedAt: Date = new Date();
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
 
   constructor(data: Partial<__CLASS_NAME__>) {
     Object.assign(this, data);
@@ -257,6 +257,8 @@ sed -i "s/__CLASS_NAME__/$CLASS_NAME/g" "$MODULE_PATH/dto/mapper.ts"
 cat > "$MODULE_PATH/routes.ts" << 'EOF'
 import { FastifyInstance } from "fastify";
 import { errorSchema } from "../../utils/error-handling/errorSchema";
+import { authFactory } from "../../utils/security/auth";
+import { authServiceFactory } from "../auth/factories";
 import {
   Create__CLASS_NAME__Dto,
   __CLASS_NAME__Schema,
@@ -269,6 +271,7 @@ import { __CLASS_NAME__DtoMapper } from "./dto/mapper";
 import { __MODULE_NAME__ServiceFactory } from "./factories";
 
 const __MODULE_NAME__Service = __MODULE_NAME__ServiceFactory();
+const auth = authFactory(authServiceFactory());
 
 export async function __MODULE_NAME__Routes(app: FastifyInstance) {
   app.route({
