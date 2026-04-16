@@ -6,12 +6,16 @@ import {
   CreateLectureDto,
   LectureListSchema,
   LectureSchema,
+  UpdateProgressDto,
   createLectureSchema,
   idParamSchema,
+  lectureProgressSchema,
   updateLectureSchema,
+  updateProgressSchema,
 } from "./dto/dto";
-import { LectureDtoMapper } from "./dto/mapper";
+import { LectureDtoMapper, LectureProgressDtoMapper } from "./dto/mapper";
 import { lectureServiceFactory } from "./factories";
+import { User } from '../user/model';
 
 const lectureService = lectureServiceFactory();
 const auth = authFactory(authServiceFactory());
@@ -126,5 +130,31 @@ export async function lectureRoutes(app: FastifyInstance) {
 
       return reply.status(204).send(null);
     },
+  });
+
+  app.route({
+    method: "POST",
+    url: "/lectures/:id/progress",
+    schema: {
+      params: idParamSchema,
+      body: updateProgressSchema,
+      response: {
+        200: lectureProgressSchema,
+        404: errorSchema,
+      },
+    },
+    preValidation: auth(AccessType.Student),
+    handler: async (request, reply) => {
+      const { id } = request.params as { id: string };
+      const { authenticated, ...data } = request.body as UpdateProgressDto & { authenticated: User };
+
+      const progress = await lectureService.updateProgress(id, authenticated.id, data);
+
+      if (!progress) {
+        return reply.status(404).send({ error: "Not found" });
+      }
+
+      return reply.send(LectureProgressDtoMapper.toDto(progress));
+    }
   });
 }

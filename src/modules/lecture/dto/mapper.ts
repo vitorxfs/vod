@@ -1,5 +1,5 @@
-import { Lecture } from "../model";
-import { CreateLectureDto, LectureDto } from "./dto";
+import { Lecture, LectureProgress } from "../model";
+import { CreateLectureDto, LectureDto, LectureProgressDto } from "./dto";
 
 export class LectureDtoMapper {
   static toDto(instance: Lecture): LectureDto {
@@ -9,6 +9,7 @@ export class LectureDtoMapper {
       courseId: instance.courseId,
       position: instance.position,
       url: instance.url,
+      progress: instance.progress[0] ? LectureProgressDtoMapper.toDto(instance.progress[0]) : null,
       createdAt: instance.createdAt,
       updatedAt: instance.updatedAt,
     };
@@ -33,5 +34,18 @@ export class LectureDtoMapper {
       position: dto.position,
       url: dto.url,
     });
+  }
+}
+
+export class LectureProgressDtoMapper {
+  static toDto(instance: LectureProgress): LectureProgressDto {
+    return {
+      id: instance.id,
+      lectureId: instance.lectureId,
+      completed: instance.completed,
+      elapsedTime: instance.elapsedTime,
+      createdAt: instance.createdAt,
+      updatedAt: instance.updatedAt,
+    };
   }
 }

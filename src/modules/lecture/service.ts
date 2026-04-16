@@ -1,4 +1,5 @@
-import { Lecture } from "./model";
+import { LectureProgressEntity } from './database/schema';
+import { Lecture, LectureProgress } from "./model";
 import { LectureRepository } from "./repository";
 
 export interface ILectureService {
@@ -7,6 +8,7 @@ export interface ILectureService {
   findById(id: string): Promise<Lecture | null>;
   update(id: string, data: Partial<Lecture>): Promise<Lecture | null>;
   delete(id: string): Promise<boolean>;
+  updateProgress(userId: string, lectureId: string, progress: Partial<LectureProgress>): Promise<LectureProgress | null>;
 }
 
 export interface LectureServiceDependencies {
@@ -38,5 +40,9 @@ export class LectureService implements ILectureService {
 
   async delete(id: string): Promise<boolean> {
     return this.repository.delete(id);
+  }
+
+  async updateProgress(userId: string, lectureId: string, progress: Partial<LectureProgress>): Promise<LectureProgress | null> {
+    return this.repository.updateProgress(userId, lectureId, progress);
   }
 }

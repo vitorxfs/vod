@@ -11,7 +11,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const entity = await this.repo.findOne({ where: { email } as FindOptionsWhere<UserEntity> });
+    const entity = await this.repo.findOne({ where: { email }, relations: ["progress"] });
     return entity ? this.mapper.toDomain(entity) : null;
   }
 }

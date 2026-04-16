@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { LectureProgressEntity } from '../../lecture/database/schema';
 
 @Entity("users")
 export class UserEntity {
@@ -22,4 +23,7 @@ export class UserEntity {
 
   @UpdateDateColumn()
   updatedAt!: Date;
+
+  @OneToMany(() => LectureProgressEntity, (progress) => progress.userId)
+  progress: LectureProgressEntity[];
 }

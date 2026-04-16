@@ -8,4 +8,9 @@ export class CourseRepository extends BaseRepository<Course, CourseEntity> {
   constructor() {
     super(database.getRepository(CourseEntity), new CourseDatabaseMapper());
   }
+
+  async findById(id: string): Promise<Course | null> {
+    const courseEntity = await this.repo.findOne({ where: { id }, relations: ["lectures"] });
+    return courseEntity ? this.mapper.toDomain(courseEntity) : null;
+  }
 }

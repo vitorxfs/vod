@@ -19,8 +19,8 @@ App -uploads-> S3 (raw) -> MediaConvert -> S3 -> CloudFront -consumed by-> App
 - [x] Create base project structure
 - [x] Connect database
 - [x] Add User authentication flow
-- [ ] Course structure
-- [ ] Class structure
+- [x] Course structure
+- [x] Class structure
 - [ ] Class Progress structure
 - [ ] Video Upload Flow
 - [ ] Watch class flow
