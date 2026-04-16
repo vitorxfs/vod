@@ -21,6 +21,8 @@ export async function courseRoutes(app: FastifyInstance) {
     method: "POST",
     url: "/courses",
     schema: {
+      description: "Create Course",
+      tags: ["Course"],
       body: createCourseSchema,
       response: {
         201: CourseSchema,
@@ -41,6 +43,8 @@ export async function courseRoutes(app: FastifyInstance) {
     method: "GET",
     url: "/courses",
     schema: {
+      description: "Get Courses",
+      tags: ["Course"],
       response: {
         200: CourseListSchema,
       },
@@ -57,6 +61,8 @@ export async function courseRoutes(app: FastifyInstance) {
     method: "GET",
     url: "/courses/:id",
     schema: {
+      description: "Get Course By Id",
+      tags: ["Course"],
       params: idParamSchema,
       response: {
         200: CourseSchema,
@@ -80,6 +86,8 @@ export async function courseRoutes(app: FastifyInstance) {
     method: "PATCH",
     url: "/courses/:id",
     schema: {
+      description: "Update Course",
+      tags: ["Course"],
       params: idParamSchema,
       body: updateCourseSchema,
       response: {
@@ -107,6 +115,8 @@ export async function courseRoutes(app: FastifyInstance) {
     method: "DELETE",
     url: "/courses/:id",
     schema: {
+      description: "Delete Course",
+      tags: ["Course"],
       params: idParamSchema,
       response: {
         204: { type: "null" },

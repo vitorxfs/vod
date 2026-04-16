@@ -23,6 +23,8 @@ export async function userRoutes(app: FastifyInstance) {
     method: "POST",
     url: "/users/new-account",
     schema: {
+      description: "New Account",
+      tags: ["User"],
       body: createUserSchema,
       response: {
         201: userSchema,
@@ -49,6 +51,8 @@ export async function userRoutes(app: FastifyInstance) {
     method: "GET",
     url: "/users",
     schema: {
+      description: "Get Users",
+      tags: ["User"],
       response: {
         200: userListSchema,
       },
@@ -65,6 +69,8 @@ export async function userRoutes(app: FastifyInstance) {
     method: "GET",
     url: "/users/:id",
     schema: {
+      description: "Get User By Id",
+      tags: ["User"],
       params: idParamSchema,
       response: {
         200: userSchema,
@@ -95,6 +101,8 @@ export async function userRoutes(app: FastifyInstance) {
     method: "PATCH",
     url: "/users/:id",
     schema: {
+      description: "Update User",
+      tags: ["User"],
       params: idParamSchema,
       body: updateUserSchema,
       response: {
@@ -127,6 +135,8 @@ export async function userRoutes(app: FastifyInstance) {
     method: "DELETE",
     url: "/users/:id",
     schema: {
+      description: "Delete User",
+      tags: ["User"],
       params: idParamSchema,
       response: {
         204: { type: "null" },

@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import { errorSchema } from "../../utils/error-handling/errorSchema";
 import { AccessType, authFactory } from "../../utils/security/auth";
 import { authServiceFactory } from "../auth/factories";
+import { User } from "../user/model";
 import {
   CreateLectureDto,
   LectureListSchema,
@@ -15,7 +16,6 @@ import {
 } from "./dto/dto";
 import { LectureDtoMapper, LectureProgressDtoMapper } from "./dto/mapper";
 import { lectureServiceFactory } from "./factories";
-import { User } from '../user/model';
 
 const lectureService = lectureServiceFactory();
 const auth = authFactory(authServiceFactory());
@@ -25,6 +25,8 @@ export async function lectureRoutes(app: FastifyInstance) {
     method: "POST",
     url: "/lectures",
     schema: {
+      description: "Create Lecture",
+      tags: ["Lecture"],
       body: createLectureSchema,
       response: {
         201: LectureSchema,
@@ -45,6 +47,8 @@ export async function lectureRoutes(app: FastifyInstance) {
     method: "GET",
     url: "/lectures",
     schema: {
+      description: "Get Lectures",
+      tags: ["Lecture"],
       response: {
         200: LectureListSchema,
       },
@@ -62,6 +66,8 @@ export async function lectureRoutes(app: FastifyInstance) {
     method: "GET",
     url: "/lectures/:id",
     schema: {
+      description: "Get Lecture By Id",
+      tags: ["Lecture"],
       params: idParamSchema,
       response: {
         200: LectureSchema,
@@ -86,6 +92,8 @@ export async function lectureRoutes(app: FastifyInstance) {
     method: "PATCH",
     url: "/lectures/:id",
     schema: {
+      description: "Update Lecture",
+      tags: ["Lecture"],
       params: idParamSchema,
       body: updateLectureSchema,
       response: {
@@ -113,6 +121,8 @@ export async function lectureRoutes(app: FastifyInstance) {
     method: "DELETE",
     url: "/lectures/:id",
     schema: {
+      description: "Delete Lecture",
+      tags: ["Lecture"],
       params: idParamSchema,
       response: {
         204: { type: "null" },
@@ -136,6 +146,8 @@ export async function lectureRoutes(app: FastifyInstance) {
     method: "POST",
     url: "/lectures/:id/progress",
     schema: {
+      description: "Update Lecture Progress",
+      tags: ["Lecture"],
       params: idParamSchema,
       body: updateProgressSchema,
       response: {
@@ -155,6 +167,6 @@ export async function lectureRoutes(app: FastifyInstance) {
       }
 
       return reply.send(LectureProgressDtoMapper.toDto(progress));
-    }
+    },
   });
 }

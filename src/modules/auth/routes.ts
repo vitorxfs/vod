@@ -1,10 +1,10 @@
 import { FastifyInstance, FastifyReply } from "fastify";
+import { env } from "../../config/env";
 import { errorSchema } from "../../utils/error-handling/errorSchema";
 import { userSchema } from "../user/dto/dto";
 import { UserDTOMapper } from "../user/dto/mapper";
 import { LoginDto, loginSchema } from "./dto/dto";
 import { authServiceFactory } from "./factories";
-import { env } from '../../config/env';
 
 const authService = authServiceFactory();
 
@@ -13,6 +13,8 @@ export async function authRoutes(app: FastifyInstance) {
     method: "POST",
     url: "/auth/login",
     schema: {
+      description: "User Login",
+      tags: ["Auth"],
       body: loginSchema,
       response: {
         201: userSchema,
